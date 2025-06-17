@@ -59,7 +59,9 @@ pd.set_option('display.float_format', lambda x: '%.10f' % x)
 ###################################################
 # Adım 1: Veri Setini Okutunuz ve Ürünün Ortalama Puanını Hesaplayınız.
 ###################################################
-df_ = pd.read_csv("/Users/ozgegunes/Desktop/MIUUL_DATA_SCIENTIST_BOOTCAMP/04-measurement_problems_week_4/2025_06_10_measurement_problems/rating/Rating Product&SortingReviewsinAmazon/amazon_review.csv")
+
+DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "amazon_review.csv"
+df_ = pd.read_csv(DATA_PATH)
 df = df_.copy()
 df.head()
 df.shape # 4915 gözlem, 12 değişken var.
@@ -132,26 +134,11 @@ def score_average_rating(up, down):
 def wilson_lower_bound(up, down, confidence=0.95):
     n = up + down                                    #Aynı oranın %95 güvenle “en az şu kadarı yardımcı demiştir” alt sınırı
     if n == 0:                                       #Aşağıdaki Wilson formülü
-        return 0                                     #Biz yalnızca alt sınırı (lower_bound) alıyoruz → “Gerçek oran %95 olasılıkla en az bu değerdedir.”
-    z = st.norm.ppf(1 - (1-confidence)/2)     # 95 % için ≈ yaklaşık 1.96 # (kritik değer)
-    phat = up / n                             # örnek oranı #Faydalı oylardan (“up”) tahmini başarı oranı.
+        return 0                                     
+    z = st.norm.ppf(1 - (1-confidence)/2)     
+    phat = up / n                            
     return (phat + z*z/(2*n) -
             z*math.sqrt(phat*(1-phat)/n + z*z/(4*n*n))) / (1 + z*z/n)
-
-#Küçük karşılaştırma örneği
-#👍	  👎 p̂ (avg)	Net diff	WLB (95 %)
-# 3	  0	  1.00	    +3	        0.44
-# 50  30  0.63	   +20	        0.52
-# 100 20  0.83	   +80	        0.76
-# 500 300 0.62	  +200	        0.59
-
-#Yalnızca WLB, “kaç oy var?” bilgisini adil şekilde hesaba kattığı için ilk iki satırı geriye düşürüp,
-# 100 👍 20 👎 yorumu öne çıkarır.
-
-#score_pos_neg_diff → “Kaç kişi fazla faydalı dedi?”
-#score_average_rating → “Oy verenlerin % kaçı faydalı dedi?”
-#wilson_lower_bound → “%95 emin olduğumuz en düşük faydalılık oranı nedir?”
-
 
 #Skorları hesaplayıp veri setine ekleyelim.
 
