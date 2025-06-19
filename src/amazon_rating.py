@@ -40,6 +40,7 @@
 ###################################################
 # GÖREV 1: Average Rating'i Güncel Yorumlara Göre Hesaplayınız ve Var Olan Average Rating ile Kıyaslayınız.
 ###################################################
+from pathlib import Path
 import pandas as pd
 import math
 import scipy.stats as st
@@ -69,7 +70,7 @@ df.shape # 4915 gözlem, 12 değişken var.
 df.groupby("asin").agg({"overall":"mean"})
 # veya
 df["overall"].mean() #(4.587589013224822)
-# #küsüratlı kısmı daha uzun gösteriyor.
+
 
 ###################################################
 # Adım 2: Tarihe Göre Ağırlıklı Puan Ortalamasını Hesaplayınız.
